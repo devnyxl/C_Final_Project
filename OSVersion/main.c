@@ -1,21 +1,9 @@
 #include "system.h"
-#include <direct.h>  // For _mkdir on Windows (use mkdir for Linux/Mac)
-
-// Global variable definitions
-Lecturer lecturers[100];
-Subject subjects[100];
-Student students[100];
-Reminder reminders[200];
-int lecturer_count = 0;
-int subject_count = 0;
-int student_count = 0;
-int reminder_count = 0;
-int current_user_id = -1;
-char current_user_role[20] = "";
+#include <sys/stat.h>  // For mkdir on macOS/Linux
 
 // Function to create directory if it doesn't exist
 void createDirectory(const char *path) {
-    _mkdir(path);
+    mkdir(path, 0777);  // macOS/Linux uses mkdir with permissions
 }
 
 // Function to clear input buffer
@@ -42,6 +30,18 @@ int readIntInput() {
         printf("Invalid input! Please enter the correct value: ");
     }
 }
+
+// Global variable definitions
+Lecturer lecturers[100];
+Subject subjects[100];
+Student students[100];
+Reminder reminders[200];
+int lecturer_count = 0;
+int subject_count = 0;
+int student_count = 0;
+int reminder_count = 0;
+int current_user_id = -1;
+char current_user_role[20] = "";
 
 void loadData() {
     FILE *fp;
@@ -115,6 +115,7 @@ void saveData() {
     }
 }
 
+// CORRECTED ATTENDANCE PERCENTAGE CALCULATION
 float calculateAttendancePercentage(int student_id, int subject_id) {
     char filename[100];
     sprintf(filename, "database/attendance_record/attendance_%d.dat", subject_id);
@@ -124,6 +125,7 @@ float calculateAttendancePercentage(int student_id, int subject_id) {
         return 0.0;
     }
     
+    // We need to count distinct dates and student's presence
     Attendance att;
     char dates[100][11];  // Store unique dates (max 100 classes)
     int date_count = 0;
@@ -133,7 +135,7 @@ float calculateAttendancePercentage(int student_id, int subject_id) {
     rewind(fp);
     while (fread(&att, sizeof(Attendance), 1, fp)) {
         if (att.subject_id == subject_id) {
-            // Check for duplicate dates using strcmp
+            // Check if this date is already recorded
             int found = 0;
             for (int i = 0; i < date_count; i++) {
                 if (strcmp(dates[i], att.date) == 0) {
