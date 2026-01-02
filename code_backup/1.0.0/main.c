@@ -1,18 +1,6 @@
 #include "system.h"
 #include <direct.h>  // For _mkdir on Windows (use mkdir for Linux/Mac)
 
-// Global variable definitions
-Lecturer lecturers[100];
-Subject subjects[100];
-Student students[100];
-Reminder reminders[200];
-int lecturer_count = 0;
-int subject_count = 0;
-int student_count = 0;
-int reminder_count = 0;
-int current_user_id = -1;
-char current_user_role[20] = "";
-
 // Function to create directory if it doesn't exist
 void createDirectory(const char *path) {
     _mkdir(path);
@@ -42,6 +30,18 @@ int readIntInput() {
         printf("Invalid input! Please enter the correct value: ");
     }
 }
+
+// Global variable definitions
+Lecturer lecturers[100];
+Subject subjects[100];
+Student students[100];
+Reminder reminders[200];
+int lecturer_count = 0;
+int subject_count = 0;
+int student_count = 0;
+int reminder_count = 0;
+int current_user_id = -1;
+char current_user_role[20] = "";
 
 void loadData() {
     FILE *fp;
@@ -183,20 +183,11 @@ int authenticateUser(char role[], char username[], char password[]) {
             }
         }
     } else if (strcmp(role, "student") == 0) {
-        // For students, username is now student ID string (e.g., "STU001")
-        // Extract numeric ID from string
-        int student_id_num;
-        if (sscanf(username, "STU%d", &student_id_num) == 1) {
-            for (int i = 0; i < student_count; i++) {
-                // Check if this is the student's ID (format: STU%03d)
-                char expected_username[20];
-                sprintf(expected_username, "STU%03d", students[i].id);
-                
-                if (strcmp(expected_username, username) == 0 && 
-                    strcmp(students[i].password, password) == 0) {
-                    current_user_id = students[i].id;
-                    return 1;
-                }
+        for (int i = 0; i < student_count; i++) {
+            if (strcmp(students[i].username, username) == 0 && 
+                strcmp(students[i].password, password) == 0) {
+                current_user_id = students[i].id;
+                return 1;
             }
         }
     }
@@ -252,7 +243,7 @@ void mainMenu() {
                 
             case 3:
                 printf("\n===== STUDENT LOGIN =====\n");
-                printf("Student ID (e.g., STU001): ");
+                printf("Username: ");
                 scanf("%s", username);
                 printf("Password: ");
                 scanf("%s", password);

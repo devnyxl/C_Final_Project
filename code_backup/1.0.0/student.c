@@ -50,30 +50,28 @@ void viewStudentAttendance() {
         return;
     }
     
-    printf("Student: %s (STU%03d)\n", current_student->name, current_student->id);
-    printf("--------------------------------------------------\n");
+    printf("Student: %s\n", current_student->name);
+    printf("----------------------------------------\n");
     
     for (int i = 0; i < current_student->subject_count; i++) {
         int subject_id = current_student->enrolled_subjects[i];
         
         char subject_name[100] = "Unknown";
-        char subject_code[20] = "N/A";
         for (int j = 0; j < subject_count; j++) {
             if (subjects[j].id == subject_id) {
                 strcpy(subject_name, subjects[j].name);
-                strcpy(subject_code, subjects[j].code);
                 break;
             }
         }
         
         float percentage = calculateAttendancePercentage(current_user_id, subject_id);
-        printf("Subject: %s (%s)\n", subject_name, subject_code);
+        printf("Subject: %s\n", subject_name);
         printf("Attendance: %.2f%%\n", percentage);
         
         if (percentage < 80.0) {
             printf("Warning: Attendance below 80%%!\n");
         }
-        printf("--------------------------------------------------\n");
+        printf("----------------------------------------\n");
     }
 }
 
@@ -85,25 +83,9 @@ void viewStudentWarnings() {
     for (int i = 0; i < reminder_count; i++) {
         if (reminders[i].student_id == current_user_id) {
             has_warnings = 1;
-            
-            // Get course name from warning message
-            char course_name[100] = "";
-            // Extract course name from message "Please Attend your <COURSE NAME> class"
-            char *start = strstr(reminders[i].message, "your ");
-            if (start != NULL) {
-                start += 5; // Skip "your "
-                char *end = strstr(start, " class");
-                if (end != NULL) {
-                    strncpy(course_name, start, end - start);
-                    course_name[end - start] = '\0';
-                }
-            }
-            
             printf("\nDate: %s\n", reminders[i].date);
-            printf("Course: %s\n", course_name);
             printf("Message: %s\n", reminders[i].message);
             printf("Status: %s\n", reminders[i].is_read ? "Read" : "Unread");
-            printf("----------------------------------------\n");
             
             reminders[i].is_read = 1;
         }

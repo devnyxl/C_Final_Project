@@ -73,6 +73,7 @@ void academicMenu();
 void registerLecturer();
 void registerSubject();
 void viewAttendanceReport();
+void viewStudentAttendancePercentage();
 void issueWarning();
 void viewWarningHistory();
 
