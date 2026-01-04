@@ -51,56 +51,64 @@ void academicMenu() {
 }
 
 void registerLecturer() {
-    Lecturer new_lecturer;
-    
-    printf("\n===== REGISTER NEW LECTURER =====\n");
-    new_lecturer.id = lecturer_count + 1;  // Start from 1
-    
-    printf("Enter Name: ");
-    scanf(" %[^\n]", new_lecturer.name);
-    
-    printf("Enter Username: ");
-    scanf("%s", new_lecturer.username);
-    
-    printf("Enter Password: ");
-    scanf("%s", new_lecturer.password);
-    
-    printf("Enter Department: ");
-    scanf(" %[^\n]", new_lecturer.department);
-    
-    lecturers[lecturer_count] = new_lecturer;
-    lecturer_count++;
-    
-    printf("Lecturer registered successfully! Lecturer ID: LEC%03d\n", new_lecturer.id);
+   Lecturer new_lecturer;
+   
+   printf("\n===== REGISTER NEW LECTURER =====\n");
+   new_lecturer.id = lecturer_count + 1;  // Start from 1
+   
+   printf("Enter Name: ");
+   scanf(" %[^\n]", new_lecturer.name);
+   clearInputBuffer();
+   
+   printf("Enter Username: ");
+   scanf("%s", new_lecturer.username);
+   clearInputBuffer();
+   
+   printf("Enter Password: ");
+   scanf("%s", new_lecturer.password);
+   clearInputBuffer();
+   
+   printf("Enter Department: ");
+   scanf(" %[^\n]", new_lecturer.department);
+   clearInputBuffer();
+   
+   lecturers[lecturer_count] = new_lecturer;
+   lecturer_count++;
+   
+   printf("Lecturer registered successfully! Lecturer ID: LEC%03d\n", new_lecturer.id);
 }
 
 void registerSubject() {
-    Subject new_subject;
-    
-    printf("\n===== REGISTER NEW SUBJECT =====\n");
-    new_subject.id = subject_count + 1;  // Start from 1
-    
-    printf("Enter Subject Code: ");
-    scanf("%s", new_subject.code);
-    
-    printf("Enter Subject Name: ");
-    scanf(" %[^\n]", new_subject.name);
-    
-    printf("Enter Credit Hours: ");
-    scanf("%d", &new_subject.credit_hours);
-    
-    printf("\nAvailable Lecturers:\n");
-    for (int i = 0; i < lecturer_count; i++) {
-        printf("LEC%03d. %s\n", lecturers[i].id, lecturers[i].name);
-    }
-    
-    printf("Assign Lecturer ID (without LEC prefix): ");
-    scanf("%d", &new_subject.lecturer_id);
-    
-    subjects[subject_count] = new_subject;
-    subject_count++;
-    
-    printf("Subject registered successfully! Subject ID: SUB%03d\n", new_subject.id);
+   Subject new_subject;
+   
+   printf("\n===== REGISTER NEW SUBJECT =====\n");
+   new_subject.id = subject_count + 1;  // Start from 1
+   
+   printf("Enter Subject Code: ");
+   scanf("%s", new_subject.code);
+   clearInputBuffer();
+   
+   printf("Enter Subject Name: ");
+   scanf(" %[^\n]", new_subject.name);
+   clearInputBuffer();
+   
+   printf("Enter Credit Hours: ");
+   scanf("%d", &new_subject.credit_hours);
+   clearInputBuffer();
+   
+   printf("\nAvailable Lecturers:\n");
+   for (int i = 0; i < lecturer_count; i++) {
+       printf("LEC%03d. %s\n", lecturers[i].id, lecturers[i].name);
+   }
+   
+   printf("Assign Lecturer ID (without LEC prefix): ");
+   scanf("%d", &new_subject.lecturer_id);
+   clearInputBuffer();
+   
+   subjects[subject_count] = new_subject;
+   subject_count++;
+   
+   printf("Subject registered successfully! Subject ID: SUB%03d\n", new_subject.id);
 }
 
 void viewAttendanceReport() {
@@ -195,7 +203,7 @@ void viewAttendanceReport() {
     
     printf("\n%s ATTENDANCE REPORT\n", subject_code);
     printf("========================================================================================================\n");
-    printf("No | Student ID | Absent Percentage | ");
+    printf("No | Student ID | Attendance Percentage | ");
     for (int i = 0; i < date_count; i++) {
         printf("%-10s | ", unique_dates[i]);
     }
@@ -217,9 +225,8 @@ void viewAttendanceReport() {
         
         // Calculate attendance percentage
         float percentage = calculateAttendancePercentage(student_id, subject_id);
-        float absent_percentage = 100.0 - percentage;
         
-        printf("%-2d | STU%03d     | %-16.1f%% | ", s + 1, student_id, absent_percentage);
+        printf("%-2d | STU%03d     | %-20.1f%% | ", s + 1, student_id, percentage);
         
         // For each date, show attendance status
         for (int d = 0; d < date_count; d++) {
@@ -312,7 +319,7 @@ void issueWarning() {
                         strcpy(new_reminder.date, warning_date);
                         
                         // Create warning message with course name
-                        sprintf(new_reminder.message, "Please Attend your %s class", subjects[sub_idx].name);
+                        sprintf(new_reminder.message, "Please Attend your %s class", subjects[sub_idx].code);
                         
                         reminders[reminder_count] = new_reminder;
                         reminder_count++;
@@ -329,9 +336,9 @@ void issueWarning() {
 
 void viewWarningHistory() {
     printf("\n===== WARNING HISTORY =====\n");
-    printf("ID  | Student ID | Date       | Message                                 | Read Status\n");
-    printf("----------------------------------------------------------------------------------------\n");
-    
+    printf("ID  | Student ID | Date       | Message                         | Read Status |\n");
+    printf("------------------------------------------------------------------------------|\n");
+
     for (int i = 0; i < reminder_count; i++) {
         // Get student name for display
         char student_name[100] = "Unknown";
@@ -342,11 +349,11 @@ void viewWarningHistory() {
             }
         }
         
-        printf("%-3d | STU%03d     | %-10s | %-40s | %s\n", 
+        printf("%-3d | STU%03d     | %-10s | %-31s | %s\n", 
                reminders[i].id,
                reminders[i].student_id,
                reminders[i].date,
                reminders[i].message,
-               reminders[i].is_read ? "Read" : "Unread");
+               reminders[i].is_read ? "Read        |" : "Unread      |");
     }
 }

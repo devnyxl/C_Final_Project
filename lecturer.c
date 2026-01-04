@@ -43,101 +43,104 @@ void lecturerMenu() {
 }
 
 void registerStudent() {
-    int subject_id, student_id;
-    
-    printf("\n===== REGISTER STUDENT FOR SUBJECT =====\n");
-    
-    printf("Subjects taught by you:\n");
-    int lecturer_subjects[10];
-    int sub_count = 0;
-    
-    for (int i = 0; i < subject_count; i++) {
-        if (subjects[i].lecturer_id == current_user_id) {
-            printf("%d. %s (%s)\n", subjects[i].id, subjects[i].name, subjects[i].code);
-            lecturer_subjects[sub_count++] = subjects[i].id;
-        }
-    }
-    
-    if (sub_count == 0) {
-        printf("You are not assigned to any subjects.\n");
-        return;
-    }
-    
-    printf("Select Subject ID: ");
-    scanf("%d", &subject_id);
-    clearInputBuffer();
-    
-    // Check if subject is taught by this lecturer
-    int valid_subject = 0;
-    for (int i = 0; i < sub_count; i++) {
-        if (lecturer_subjects[i] == subject_id) {
-            valid_subject = 1;
-            break;
-        }
-    }
-    
-    if (!valid_subject) {
-        printf("Invalid subject ID or you don't teach this subject!\n");
-        return;
-    }
-    
-    printf("\n1. Register new student\n");
-    printf("2. Enroll existing student\n");
-    printf("Enter choice: ");
-    int reg_choice;
-    scanf("%d", &reg_choice);
-    clearInputBuffer();
-    
-    if (reg_choice == 1) {
-        Student new_student;
-        
-        printf("\nEnter Student Name: ");
-        scanf(" %[^\n]", new_student.name);
-        
-        printf("Enter Username: ");
-        scanf("%s", new_student.username);
-        
-        printf("Enter Password: ");
-        scanf("%s", new_student.password);
-        
-        new_student.id = student_count + 1;  // Start from 1
-        new_student.subject_count = 1;
-        new_student.enrolled_subjects[0] = subject_id;
-        
-        students[student_count] = new_student;
-        student_count++;
-        
-        printf("Student registered and enrolled successfully! Student ID: STU%03d\n", new_student.id);
-        
-    } else if (reg_choice == 2) {
-        printf("\nExisting Students:\n");
-        for (int i = 0; i < student_count; i++) {
-            printf("STU%03d. %s\n", students[i].id, students[i].name);
-        }
-        
-        printf("Enter Student ID (without STU prefix): ");
-        scanf("%d", &student_id);
-        clearInputBuffer();
-        
-        for (int i = 0; i < student_count; i++) {
-            if (students[i].id == student_id) {
-                for (int j = 0; j < students[i].subject_count; j++) {
-                    if (students[i].enrolled_subjects[j] == subject_id) {
-                        printf("Student already enrolled in this subject.\n");
-                        return;
-                    }
-                }
-                
-                students[i].enrolled_subjects[students[i].subject_count] = subject_id;
-                students[i].subject_count++;
-                printf("Student enrolled successfully!\n");
-                return;
-            }
-        }
-        printf("Student not found!\n");
-    } else {
-        printf("Invalid choice!\n");
-    }
+   int subject_id, student_id;
+   
+   printf("\n===== REGISTER STUDENT FOR SUBJECT =====\n");
+   
+   printf("Subjects taught by you:\n");
+   int lecturer_subjects[10];
+   int sub_count = 0;
+   
+   for (int i = 0; i < subject_count; i++) {
+       if (subjects[i].lecturer_id == current_user_id) {
+           printf("SUB%03d. %s (%s)\n", subjects[i].id, subjects[i].name, subjects[i].code);
+           lecturer_subjects[sub_count++] = subjects[i].id;
+       }
+   }
+   
+   if (sub_count == 0) {
+       printf("You are not assigned to any subjects.\n");
+       return;
+   }
+   
+   printf("Select Subject ID (without SUB prefix): ");
+   scanf("%d", &subject_id);
+   clearInputBuffer();
+   
+   // Check if subject is taught by this lecturer
+   int valid_subject = 0;
+   for (int i = 0; i < sub_count; i++) {
+       if (lecturer_subjects[i] == subject_id) {
+           valid_subject = 1;
+           break;
+       }
+   }
+   
+   if (!valid_subject) {
+       printf("Invalid subject ID or you don't teach this subject!\n");
+       return;
+   }
+   
+   printf("\n1. Register new student\n");
+   printf("2. Enroll existing student\n");
+   printf("Enter choice: ");
+   int reg_choice;
+   scanf("%d", &reg_choice);
+   clearInputBuffer();
+   
+   if (reg_choice == 1) {
+       Student new_student;
+       
+       printf("\nEnter Student Name: ");
+       scanf(" %[^\n]", new_student.name);
+       clearInputBuffer();
+       
+       printf("Enter Username: ");
+       scanf("%s", new_student.username);
+       clearInputBuffer();
+       
+       printf("Enter Password: ");
+       scanf("%s", new_student.password);
+       clearInputBuffer();
+       
+       new_student.id = student_count + 1;  // Start from 1
+       new_student.subject_count = 1;
+       new_student.enrolled_subjects[0] = subject_id;
+       
+       students[student_count] = new_student;
+       student_count++;
+       
+       printf("Student registered and enrolled successfully! Student ID: STU%03d\n", new_student.id);
+       
+   } else if (reg_choice == 2) {
+       printf("\nExisting Students:\n");
+       for (int i = 0; i < student_count; i++) {
+           printf("STU%03d. %s\n", students[i].id, students[i].name);
+       }
+       
+       printf("Enter Student ID (without STU prefix): ");
+       scanf("%d", &student_id);
+       clearInputBuffer();
+       
+       for (int i = 0; i < student_count; i++) {
+           if (students[i].id == student_id) {
+               for (int j = 0; j < students[i].subject_count; j++) {
+                   if (students[i].enrolled_subjects[j] == subject_id) {
+                       printf("Student already enrolled in this subject.\n");
+                       return;
+                   }
+               }
+               
+               students[i].enrolled_subjects[students[i].subject_count] = subject_id;
+               students[i].subject_count++;
+               printf("Student enrolled successfully!\n");
+               return;
+           }
+       }
+       printf("Student not found!\n");
+   } else {
+       printf("Invalid choice!\n");
+   }
 }
 
 int isDateExistsForSubject(int subject_id, char date[]) {
